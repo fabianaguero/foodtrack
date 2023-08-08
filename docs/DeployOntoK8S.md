@@ -101,17 +101,17 @@ Create a yaml file named `spec.yaml` in Minifabric's working directory. The foll
 ```
 fabric:
   cas:
-  - "ca1.org0.example.com"
-  - "ca1.org1.example.com"
+  - "ca1.org0.foodtracking.com"
+  - "ca1.org1.foodtracking.com"
   peers: 
-  - "peer1.org0.example.com"
-  - "peer2.org0.example.com"
-  - "peer1.org1.example.com"
-  - "peer2.org1.example.com"
+  - "peer1.org0.foodtracking.com"
+  - "peer2.org0.foodtracking.com"
+  - "peer1.org1.foodtracking.com"
+  - "peer2.org1.foodtracking.com"
   orderers:
-  - "orderer1.example.com"
-  - "orderer2.example.com"
-  - "orderer3.example.com"
+  - "orderer1.foodtracking.com"
+  - "orderer2.foodtracking.com"
+  - "orderer3.foodtracking.com"
   settings:
     ca:
       FABRIC_LOGGING_SPEC: DEBUG
@@ -154,19 +154,19 @@ assign labels  to node for controlling pod and node binding.
 
 # add label to node
 #      all pods in org0 => node1
-kubectl label node node1 dock.hlf-dn/org0.example.com=ok
+kubectl label node node1 dock.hlf-dn/org0.foodtracking.com=ok
 #      all pods in org1 => node2
-kubectl label node node2 dock.hlf-dn/org1.example.com=ok
+kubectl label node node2 dock.hlf-dn/org1.foodtracking.com=ok
 #      all ordererer  => node2, excepts orderer1 => node1
 kubectl label node node2 dock.hlf-type/orderer=ok
-kubectl label node node1 dock.hlf-fqdn/orderer1.example.com=ok
+kubectl label node node1 dock.hlf-fqdn/orderer1.foodtracking.com=ok
 :
 
 # delete label from node
-kubectl label node node1 dock.hlf-dn/org0.example.com-
-kubectl label node node2 dock.hlf-dn/org1.example.com-
+kubectl label node node1 dock.hlf-dn/org0.foodtracking.com-
+kubectl label node node2 dock.hlf-dn/org1.foodtracking.com-
 kubectl label node node2 dock.hlf-type/orderer-
-kubectl label node node1 dock.hlf-fqdn/orderer1.example.com-
+kubectl label node node1 dock.hlf-fqdn/orderer1.foodtracking.com-
 :
 ```
 
@@ -187,8 +187,8 @@ As you see the above, three types of label involved to control the pod's destina
    - the word following 'dock.hlf-dn/' is up to your spec.yaml.
 
 * note: node labeling for couchdb needs a little care as following example:
-   - dock.hlf-fqdn/peer1.org0.example.com.couchdb=ok   ('.couchdb' appended at the end of the frontend peer's fqdn).
-   - dock.hlf-dn/org0.example.com=ok controls couchdb as well as peer and ca.
+   - dock.hlf-fqdn/peer1.org0.foodtracking.com.couchdb=ok   ('.couchdb' appended at the end of the frontend peer's fqdn).
+   - dock.hlf-dn/org0.foodtracking.com=ok controls couchdb as well as peer and ca.
 
 * You can assign multiple labels to a node(in mixing also allowed).
 * after pods deployment, you can check binding results by ```kubectl get pod -A -o wide```

@@ -71,7 +71,7 @@ function printHelp() {
   echo ""
   echo "    options:"
   echo "    -a|--target-environment   - set desired network environment, options are: DOCKER, K8SCLASSIC, K8SOPERATOR"
-  echo "    -c|--channel-name         - channel name to use (defaults to \"mychannel\")"
+  echo "    -c|--channel-name         - channel name to use (defaults to \"mainchannel\")"
   echo "    -s|--database-type        - the database backend to use: goleveldb (default) or couchdb"
   echo "    -l|--chaincode-language   - the language of the chaincode: go (default), node, or java"
   echo "    -i|--fabric-release       - the fabric release to be used to launch the network (defaults to \"2.1\")"

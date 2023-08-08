@@ -1,12 +1,9 @@
-# Add a new organization to the existing network
+#  Agregar una nueva organización a la red existente
 
-There are normally two different cases to add a new organization to a running fabric network.
-Both cases are essentially the channel configuration update operations. If a new organization
-goes into application channel, then the new organization wont be able to create new channels.
-If a new organization goes into system channel, then the new organization will be able to
-create new channels.
+Normalmente hay dos casos diferentes para agregar una nueva organización a una red de estructura en ejecución. hAmbos casos son esencialmente las operaciones de actualización de la configuración del canal. Si una nueva organización entra en el canal de la aplicación, entonces la nueva organización no podrá crear nuevos canales. Si una nueva organización entra en el canal del sistema, entonces la nueva organización podrá
+crear nuevos canales.
 
-1. [New organization to application channel easy way](#new-organization-to-application-channel-easy-way)
+1. [Nueva organización al canal de aplicaciones de manera fácil](#new-organization-to-application-channel-easy-way)
 2. [New organization to system channel](#new-organization-to-system-channel)
 3. [New organization to application channel (Fast Way)](#new-organization-to-application-channel)
 
@@ -86,9 +83,9 @@ when channel update command runs.
 
 1. Use minifab channelquery command to get an existing channel configuration
 ```
-   minifab channelquery -c mychannel
+   minifab channelquery -c mainchannel
 ```
-The above command should produce a file named vars/mychannel_config.json file.
+The above command should produce a file named vars/mainchannel_config.json file.
 
 2. Find the new organization configuration, if you are using minifabric to stand up a new
 organization, then you should already have the file in vars directory on the host where
@@ -110,7 +107,7 @@ files ready, run the following command to produce a new new channel configuratio
 
 ```
   jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {(.[1].values.MSP.value.config.name): .[1]}}}}}'
-  vars/mychannel_config.json JoinRequest_org50-example-com.json |
+  vars/mainchannel_config.json JoinRequest_org50-example-com.json |
   jq -s '.[0] * {"channel_group":{"groups":{"Application":{"version":
   (.[0].channel_group.groups.Application.version|tonumber + 1)|tostring }}}}' > updatedchannel.json
 ```
@@ -119,10 +116,10 @@ Since you are adding a json element to an element in the channel configuration f
 to increase the version number of the changing element, in this case, the element is
 channel_group.groups.Application. Verify that the new org is now part of the newchannel.json file
 and also make sure that the version of the element has increased by 1. Now use the updatedchannel.json
-to overwrite the vars/mychannel_config.json
+to overwrite the vars/mainchannel_config.json
 
 ```
-  sudo cp updatedchannel.json vars/mychannel_config.json
+  sudo cp updatedchannel.json vars/mainchannel_config.json
 ```
 
 4. Now simply run the following command to make the new organization a part of the application channel

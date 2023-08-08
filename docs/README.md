@@ -61,7 +61,7 @@ A working directory is a directory where all Minifabric commands should run from
 
 ### Stand up a Fabric network:
 
-To stand up a Fabric network, simply run the `minifab up` command in your working directory. When the command finishes, you should have a Fabric network running normally using the latest Fabric release (currently 2.3.0) on your machine. You will also have an application channel named `mychannel` created, all peers defined in the network spec file joined into that channel, and a chaincode named `simple` installed and instantiated. This command is the command to use if you simply want to stand up a Fabric network with channel and chaincode all ready for business. Since it executes the majority of a Fabric network operations, the process will take around 4 minutes to complete if you have a reasonably good internet connection because the process will also download the Hyperledger Fabric official images from Docker Hub.
+To stand up a Fabric network, simply run the `minifab up` command in your working directory. When the command finishes, you should have a Fabric network running normally using the latest Fabric release (currently 2.3.0) on your machine. You will also have an application channel named `mainchannel` created, all peers defined in the network spec file joined into that channel, and a chaincode named `simple` installed and instantiated. This command is the command to use if you simply want to stand up a Fabric network with channel and chaincode all ready for business. Since it executes the majority of a Fabric network operations, the process will take around 4 minutes to complete if you have a reasonably good internet connection because the process will also download the Hyperledger Fabric official images from Docker Hub.
 
 If you would like to use a different version of Fabric, simply specify the version using the -i flag as follows
 
@@ -135,15 +135,15 @@ You can place any ca, peer, or orderer node configuration parameters under each 
 
 For example, following is the result for default spec.yaml with `-e 7778`
 
-> ca1.org0.example.com --> hostPort=7778
-> ca1.org1.example.com --> hostPort=7779
-> orderer1.example.com --> 0.0.0.0:7784->7050/tcp, 0.0.0.0:8784->7060/tcp   
-> orderer2.example.com --> 0.0.0.0:7785->7050/tcp, 0.0.0.0:8785->7060/tcp   
-> orderer3.example.com --> 0.0.0.0:7786->7050/tcp, 0.0.0.0:8786->7060/tcp   
-> peer1.org0.example.com --> mspid = org0-example-com, organization name = org0.example.com, hostPort=7780, 8780
-> peer2.org0.example.com --> mspid = org0-example-com, organization name = org0.example.com, hostPort=7781, 8781
-> peer1.org1.example.com --> mspid = org1-example-com, organization name = org1.example.com, hostPort=7782, 8782
-> peer2.org1.example.com --> mspid = org1-example-com, organization name = org1.example.com, hostPort=7783, 8783
+> ca1.org0.foodtracking.com --> hostPort=7778
+> ca1.org1.foodtracking.com --> hostPort=7779
+> orderer1.foodtracking.com --> 0.0.0.0:7784->7050/tcp, 0.0.0.0:8784->7060/tcp   
+> orderer2.foodtracking.com --> 0.0.0.0:7785->7050/tcp, 0.0.0.0:8785->7060/tcp   
+> orderer3.foodtracking.com --> 0.0.0.0:7786->7050/tcp, 0.0.0.0:8786->7060/tcp   
+> peer1.org0.foodtracking.com --> mspid = org0-example-com, organization name = org0.foodtracking.com, hostPort=7780, 8780
+> peer2.org0.foodtracking.com --> mspid = org0-example-com, organization name = org0.foodtracking.com, hostPort=7781, 8781
+> peer1.org1.foodtracking.com --> mspid = org1-example-com, organization name = org1.foodtracking.com, hostPort=7782, 8782
+> peer2.org1.foodtracking.com --> mspid = org1-example-com, organization name = org1.foodtracking.com, hostPort=7783, 8783
 
 In default, **docker network** is automatically generated based on the working directory. This ensures that two different working directories will result in two different docker networks. This allows you to setup multiple sites on the same machine to mimic multiple organizations across multiple machines.
 You can assign specific docker network name by uncomment bellow line in spec.yaml file. This allows you to setup fabric capability on the existing docker network easily. If you have multiple sites on same machine, it will be necessary to have different name for each site to avoid network conflict.

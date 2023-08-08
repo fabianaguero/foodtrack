@@ -39,7 +39,7 @@ func doEnroll() {
 	// Try to get some configuration data from the connection profile
 	sdkcfg, _ := sdk.Config()
 	idcfg, _ := rmsp.ConfigFromBackend(sdkcfg)
-	caconfig, ok := idcfg.CAConfig("ca1.org1.example.com")
+	caconfig, ok := idcfg.CAConfig("ca1.org1.foodtracking.com")
 	if !ok {
 		fmt.Println("Could not get the caconfiguration.")
 		return
@@ -134,7 +134,7 @@ func useGateway() {
 		fmt.Println("Failed to create gateway")
 	}
 
-	network, err := gw.GetNetwork("mychannel")
+	network, err := gw.GetNetwork("mainchannel")
 	if err != nil {
 		fmt.Printf("Failed to get network: %v", err)
 	}
@@ -197,7 +197,7 @@ func useWalletGateway() {
 		fmt.Println("Failed to create gateway")
 	}
 
-	network, err := gw.GetNetwork("mychannel")
+	network, err := gw.GetNetwork("mainchannel")
 	if err != nil {
 		fmt.Printf("Failed to get network: %v", err)
 	}

@@ -2,6 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"os"
+	"reflect"
+	"strconv"
+	"sync"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/msp"
@@ -10,18 +17,12 @@ import (
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	rmsp "github.com/hyperledger/fabric-sdk-go/pkg/msp"
-	"math/rand"
-	"os"
-	"reflect"
-	"strconv"
-	"sync"
-	"time"
 )
 
 const (
 	ccID      = "samplecc"
 	channelID = "mychannel"
-	orgName   = "org1.example.com"
+	orgName   = "org1.foodtraking,com"
 	orgAdmin  = "Admin"
 )
 
@@ -38,7 +39,7 @@ func doEnroll() {
 	// Try to get some configuration data from the connection profile
 	sdkcfg, _ := sdk.Config()
 	idcfg, _ := rmsp.ConfigFromBackend(sdkcfg)
-	caconfig, ok := idcfg.CAConfig("ca1.org1.example.com")
+	caconfig, ok := idcfg.CAConfig("ca1.org1.foodtraking,com")
 	if !ok {
 		fmt.Println("Could not get the caconfiguration.")
 		return

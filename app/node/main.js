@@ -15,7 +15,7 @@ async function main() {
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join('/vars/profiles/vscode/wallets', 'org0.example.com');
+        const walletPath = path.join('/vars/profiles/vscode/wallets', 'org0.foodtracking.com');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -30,7 +30,7 @@ async function main() {
         await gateway.connect(ccp, { wallet, identity: 'Admin', discovery: { enabled: true, asLocalhost: false } });
 
         // Get the network (channel) our contract is deployed to.
-        const network = await gateway.getNetwork('mychannel');
+        const network = await gateway.getNetwork('mainchannel');
 
         // Get the contract from the network.
         const contract = network.getContract('samplecc');
