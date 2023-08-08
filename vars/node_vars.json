@@ -1,0 +1,140 @@
+{
+  "allcas": [
+    {
+      "adminPassword": "adminpw",
+      "command": "fabric-ca-server start -b admin:adminpw --cfg.affiliations.allowremove --cfg.identities.allowremove",
+      "fullname": "ca1.org0.foodtracking.com",
+      "mspid": "org0-foodtracking-com",
+      "name": "ca1",
+      "org": "org0.foodtracking.com",
+      "port": "7054",
+      "portmap": "",
+      "type": "ca",
+      "url": "ca1.org0.foodtracking.com"
+    },
+    {
+      "adminPassword": "adminpw",
+      "command": "fabric-ca-server start -b admin:adminpw --cfg.affiliations.allowremove --cfg.identities.allowremove",
+      "fullname": "ca1.org1.foodtracking.com",
+      "mspid": "org1-foodtracking-com",
+      "name": "ca1",
+      "org": "org1.foodtracking.com",
+      "port": "7054",
+      "portmap": "",
+      "type": "ca",
+      "url": "ca1.org1.foodtracking.com"
+    }
+  ],
+  "allcouchdbs": [],
+  "allorderers": [
+    {
+      "fullname": "orderer1.foodtracking.com",
+      "mspid": "foodtracking-com",
+      "name": "orderer1",
+      "org": "foodtracking.com",
+      "port": "7050",
+      "portmap": "",
+      "type": "orderer",
+      "url": "orderer1.foodtracking.com"
+    },
+    {
+      "fullname": "orderer2.foodtracking.com",
+      "mspid": "foodtracking-com",
+      "name": "orderer2",
+      "org": "foodtracking.com",
+      "port": "7050",
+      "portmap": "",
+      "type": "orderer",
+      "url": "orderer2.foodtracking.com"
+    },
+    {
+      "fullname": "orderer3.foodtracking.com",
+      "mspid": "foodtracking-com",
+      "name": "orderer3",
+      "org": "foodtracking.com",
+      "port": "7050",
+      "portmap": "",
+      "type": "orderer",
+      "url": "orderer3.foodtracking.com"
+    }
+  ],
+  "allorgs": [
+    "foodtracking.com",
+    "org0.foodtracking.com",
+    "org1.foodtracking.com"
+  ],
+  "allpeers": [
+    {
+      "adminPassword": "adminpw",
+      "fullname": "peer1.org0.foodtracking.com",
+      "mspid": "org0-foodtracking-com",
+      "name": "peer1",
+      "org": "org0.foodtracking.com",
+      "port": "7051",
+      "portmap": "",
+      "type": "peer",
+      "url": "peer1.org0.foodtracking.com"
+    },
+    {
+      "adminPassword": "adminpw",
+      "fullname": "peer2.org0.foodtracking.com",
+      "mspid": "org0-foodtracking-com",
+      "name": "peer2",
+      "org": "org0.foodtracking.com",
+      "port": "7051",
+      "portmap": "",
+      "type": "peer",
+      "url": "peer2.org0.foodtracking.com"
+    },
+    {
+      "adminPassword": "adminpw",
+      "fullname": "peer1.org1.foodtracking.com",
+      "mspid": "org1-foodtracking-com",
+      "name": "peer1",
+      "org": "org1.foodtracking.com",
+      "port": "7051",
+      "portmap": "",
+      "type": "peer",
+      "url": "peer1.org1.foodtracking.com"
+    },
+    {
+      "adminPassword": "adminpw",
+      "fullname": "peer2.org1.foodtracking.com",
+      "mspid": "org1-foodtracking-com",
+      "name": "peer2",
+      "org": "org1.foodtracking.com",
+      "port": "7051",
+      "portmap": "",
+      "type": "peer",
+      "url": "peer2.org1.foodtracking.com"
+    }
+  ],
+  "caorgs": [
+    "org0.foodtracking.com",
+    "org1.foodtracking.com"
+  ],
+  "console_port": "7203",
+  "explorer_port": "7201",
+  "ordererorgs": [
+    "foodtracking.com"
+  ],
+  "orgattrs": {
+    "foodtracking.com": {
+      "certpath": "ordererOrganizations",
+      "mspid": "foodtracking-com"
+    },
+    "org0.foodtracking.com": {
+      "certpath": "peerOrganizations",
+      "mspid": "org0-foodtracking-com"
+    },
+    "org1.foodtracking.com": {
+      "certpath": "peerOrganizations",
+      "mspid": "org1-foodtracking-com"
+    }
+  },
+  "peerorgs": [
+    "org0.foodtracking.com",
+    "org1.foodtracking.com"
+  ],
+  "portainer_port": "7202"
+}
