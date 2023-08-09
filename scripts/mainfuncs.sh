@@ -29,7 +29,7 @@ OPNAMES=([up]="$LINE0$LINE1" [netup]='imageget,certgen,netup,netstats' \
 
 # Print the usage message
 function printHelp() {
-  echo "Usage: "
+  echo "Usar asi : "
   echo "  minifab <mode> [options]"
   echo "    <mode> - one of operations or combination of operations separated by comma"
   echo ""
@@ -153,5 +153,6 @@ function getRealRootDir() {
 
 function startMinifab() {
   export ANSIBLE_STDOUT_CALLBACK=$RUN_OUTPUT
+  echo 'Parametros  ' "'"${funcparams}"'"'
   time doOp $funcparams
 }

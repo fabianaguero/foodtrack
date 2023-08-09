@@ -21,6 +21,7 @@ fi
 minifab_opt="${minifab_opt} -e K8S_AUTH_PROXY=${K8S_AUTH_PROXY} -e K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH=${K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH}"
 #   for fabric-tools ops
 minifab_opt="${minifab_opt} -e https_proxy=${https_proxy} -e no_proxy=${no_proxy}"
+echo " Paramss 1 " ${minifab_opt}
 
 docker run --rm --name minifab -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/vars:/home/vars \
             -e "ADDRS=$ADDRS" ${minifab_opt} foodtrack:latest /home/main.sh "$@"
