@@ -15,7 +15,7 @@
 # this may be commented out to resolve installed version of tools if desired
 export PATH=${PWD}/../bin:${PWD}:$PATH
 export FABRIC_CFG_PATH=${PWD}
-export VERBOSE=false
+export VERBOSE=true
 export DOCKER_API_VERSION=1.39
 
 . scripts/mainfuncs.sh
