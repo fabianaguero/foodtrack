@@ -153,6 +153,7 @@ function getRealRootDir() {
 
 function startMinifab() {
   export ANSIBLE_STDOUT_CALLBACK=$RUN_OUTPUT
-  echo 'Parametros  ' "'"${funcparams}"'"'
+  echo "'"${funcparams}"'"' Parametros fncparams!'
+
   time doOp $funcparams
 }
