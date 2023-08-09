@@ -1,54 +1,45 @@
 #  Agregar una nueva organización a la red existente
 
-Normalmente hay dos casos diferentes para agregar una nueva organización a una red de estructura en ejecución. hAmbos casos son esencialmente las operaciones de actualización de la configuración del canal. Si una nueva organización entra en el canal de la aplicación, entonces la nueva organización no podrá crear nuevos canales. Si una nueva organización entra en el canal del sistema, entonces la nueva organización podrá
+Normalmente hay dos casos diferentes para agregar una nueva organización a una red de estructura en ejecución. Ambos casos son esencialmente las operaciones de actualización de la configuración del canal. Si una nueva organización entra en el canal de la aplicación, entonces la nueva organización no podrá crear nuevos canales. Si una nueva organización entra en el canal del sistema, entonces la nueva organización podrá
 crear nuevos canales.
 
 1. [Nueva organización al canal de aplicaciones de manera fácil](#new-organization-to-application-channel-easy-way)
-2. [New organization to system channel](#new-organization-to-system-channel)
-3. [New organization to application channel (Fast Way)](#new-organization-to-application-channel)
+2. [Nueva organización al canal del sistema](#new-organization-to-system-channel)
+3. [Nueva organización al canal de aplicación (Manera rápida)](#new-organization-to-application-channel)
 
-### New organization to application channel easy way
+### Nueva organización al canal de aplicaciones de manera fácil
 
-Find the new organization's JoinRequest json file and save it as `vars/NewOrgJoinRequest.json`.
-If you are using minifabric `netup` command setting up the new org, that file will be create in the
-working directory's `vars` directory. If you are using other means setting up new org, then you most
-likely have to manually create the file.
+Busque el archivo json JoinRequest de la nueva organización y guárdelo como `vars/NewOrgJoinRequest.json`.
+Si estás usando  el comando ` minifabric netup`  que configura la nueva organización, ese archivo se creará en el directorio `vars` del directorio de trabajo. Si está utilizando otros medios para configurar una nueva organización, entonces lo más probable tengas que crear manualmente el archivo
 
-Run the following command:
+Ejecute el siguiente comando :
 
 ```
   minifab orgjoin
 ```
 
-This command will retrieve the current channel configuration, then merge the new org's request,
-eventually do channel sign off and channel update. Once it is done, you can do `minifab channelquery`
-to verify that the new organization is part of the channel
+Este comando recuperará la configuración del canal actual, luego fusionará la solicitud de la nueva organización, finalmente cierre la sesión del canal y actualice el canal. Una vez hecho esto, puede hacer `minifab channelquery` para verificar que la nueva organización es parte del canal.
 
-### New organization to system channel
-1. Use minifab channelquery command to get the system channel configuration
+### Nueva organización al canal del sistema
+1. Use el comando minifab channelquery para obtener la configuración del canal del sistema
 ```
    minifab channelquery -c systemchannel
 ```
-The above command should produce a file named vars/systemchannel_config.json file.
+El comando anterior debería producir un archivo llamado  `vars/systemchannel_config.json ` .
 
-2. Find the new organization configuration, if you are using minifabric to stand up a new
-organization, then you should already have the file in vars directory on the host where
-minifabric was run, each organization should have a JoinRequest file. The names of these
-files should follow a pattern like this:
+2. Encuentre la nueva configuración de la organización, si está utilizando minifabric para levantar una nueva organización, entonces ya debería tener el archivo en el directorio `vars` en el host donde se ejecutó minifabric, cada organización debe tener un archivo JoinRequest. Los nombres de estos
+los archivos deben seguir un patrón como este:
 
 ```
    JoinRequest_<organization msp id>.json
 
-   For example:
+   Por ejemplo:
    JoinRequest_org50-example-com.json
 ```
 
-Place the new organization configuration file in the working directory. In all the following
-steps, we assume that the new organization configuration file is named JoinRequest_org50-example-com.json
+Coloque el nuevo archivo de configuración de la organización en el directorio de trabajo. En todos los siguientes pasos, asumimos que el nuevo archivo de configuración de la organización se llama `JoinRequest_org50-example-com.json`
 
-3. Once you have the system channel configuration json file and new organization configuration
-files ready, run the following command one long line to produce a new channel configuration file
-
+3. Una vez que tenga el archivo json de configuración del canal del sistema y la nueva configuración de la organización archivos listos, ejecute el siguiente comando una línea larga para producir un nuevo archivo de configuración de canal.
 ```
   jq -s '.[0] * {"channel_group":{"groups":{"Consortiums":{"groups":{"SampleConsortium":{"groups":
   {(.[1].values.MSP.value.config.name): .[1]}}}}}}}' vars/systemchannel_config.json
@@ -57,54 +48,44 @@ files ready, run the following command one long line to produce a new channel co
   (.[0].channel_group.groups.Consortiums.groups.SampleConsortium.version|tonumber + 1)|tostring }}}}}}' > updatedchannel.json
 ```
 
-The above command assumes that the consortium is named `SampleConsortium`. When you setup fabric network using
-minifabric, the system channel name is `systemchannel`, the consortium name is `SampleConsortium`. If your fabric
-network was not setup by minifabric, your system channel name and consortium name can be different.
-Since you are adding an element to the channel configuration json file, you will have to increase the version number
-of the changing element, in this case, the element is channel_group.groups.Consortiums.groups.SampleConsortium.
-Now use the updatedchannel.json to overwrite the vars/systemchannel_config.json
+El comando anterior asume que el consorcio se llama `SampleConsortium`.Cuando configura la red fabric usando minifabric, el nombre del canal del sistema es `systemchannel`, el nombre del consorcio es `SampleConsortium``. Si su red Fabric no fue configurada por minifabric, el nombre del canal de su sistema y el nombre del consorcio pueden ser diferentes..
+Dado que está agregando un elemento al archivo json de configuración del canal, deberá aumentar el número de versión del elemento que cambio, en este caso, el elemento es channel_group.groups.Consortiums.groups.SampleConsortium. Ahora use `updatedchannel.json` para sobrescribir `vars/systemchannel_config.json`.
 
 ```
   sudo cp updatedchannel.json vars/systemchannel_config.json
 ```
 
-5. Now simply run the following command to make the new organization a part of the application channel
+5.Ahora simplemente ejecute el siguiente comando para que la nueva organización forme parte del canal de la aplicación.
 
 ```
    minifab channelsign,channelupdate -c systemchannel
 ```
 
-If you have organizations spread out onto multiple hosts, you will need to run channelsign on the hosts
-which make up majority of the channels or the required number of orgs by your channel endorsement policy.
-The signed file will have to be passed from one org to the other so that all the endorsements are gathered
-when channel update command runs.
+Si tiene organizaciones distribuidas en varios hosts, deberá ejecutar channelsign en los hosts que constituyen la mayoría de los canales o la cantidad requerida de organizaciones según la política de respaldo de su canal. El archivo firmado deberá pasarse de una organización a otra para que se recopilen todos los endorsements. cuando se ejecuta el comando de actualización de canal.
 
-### New organization to application channel
+### Nueva organización al canal de aplicación.
 
-1. Use minifab channelquery command to get an existing channel configuration
+1. Use el comando minifab channelquery para obtener una configuración de canal existente.
 ```
    minifab channelquery -c mainchannel
 ```
-The above command should produce a file named vars/mainchannel_config.json file.
+El comando anterior debería producir un archivo llamado `vars/mainchannel_config.json`.
 
-2. Find the new organization configuration, if you are using minifabric to stand up a new
-organization, then you should already have the file in vars directory on the host where
-minifabric was run, each organization should have a JoinRequest file. The names of these
-files should follow the pattern like this:
+2. Encuentre la nueva configuración de la organización, si está utilizando minifabric para levantar una nueva organización, entonces ya debería tener el archivo en el directorio `vars `en el host donde
+se ejecutó minifabric, cada organización debe tener un archivo `JoinRequest`. Los nombres de estos
+los archivos deben seguir el patrón como este:
 
 ```
    JoinRequest_<organization msp id>.json
 
-   For example:
+   Por ejemplo:
    JoinRequest_org50-example-com.json
 ```
 
-Place the new organization configuration file in the working directory. In all the following
-steps, we assume that the new organization configuration file is named JoinRequest_org50-example-com.json
+Coloque el nuevo archivo de configuración de la organización en el directorio de trabajo. En todos los siguientes pasos, asumimos que el nuevo archivo de configuración de la organización se llama `JoinRequest_org50-example-com.json`.
 
-3. Once you have the channel configuration json file and new organization configuration
-files ready, run the following command to produce a new new channel configuration file.
-
+3. Una vez que tenga el archivo json de configuración del canal y la nueva configuración de la organización
+archivos listos, ejecute el siguiente comando para generar un nuevo archivo de configuración de canal.
 ```
   jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {(.[1].values.MSP.value.config.name): .[1]}}}}}'
   vars/mainchannel_config.json JoinRequest_org50-example-com.json |
@@ -112,23 +93,22 @@ files ready, run the following command to produce a new new channel configuratio
   (.[0].channel_group.groups.Application.version|tonumber + 1)|tostring }}}}' > updatedchannel.json
 ```
 
-Since you are adding a json element to an element in the channel configuration file, you will have
-to increase the version number of the changing element, in this case, the element is
-channel_group.groups.Application. Verify that the new org is now part of the newchannel.json file
-and also make sure that the version of the element has increased by 1. Now use the updatedchannel.json
-to overwrite the vars/mainchannel_config.json
+Dado que está agregando un elemento json a un elemento en el archivo de configuración del canal, tendrá
+para aumentar el número de versión del elemento que cambio, en este caso, el elemento es
+`channel_group.groups.Application`. Verifique que la nueva organización ahora sea parte del archivo `newchannel.json`
+y también asegúrese de que la versión del elemento haya aumentado en 1. Ahora use el canal `actualizado.json`
+para sobrescribir `vars/mainchannel_config.json`.
 
 ```
   sudo cp updatedchannel.json vars/mainchannel_config.json
 ```
 
-4. Now simply run the following command to make the new organization a part of the application channel
-
+4. Ahora simplemente ejecute el siguiente comando para que la nueva organización forme parte del canal de la aplicación
 ```
    minifab channelsign,channelupdate
 ```
 
-If you have organizations spread out onto multiple hosts, you will need to run channelsign on the hosts
-which make up majority of the channels or the required number of orgs by your channel endorsement policy.
-The signed file will have to be passed from one org to the other so that all the endorsements are gathered
-when channel update command runs.
+Si tiene organizaciones distribuidas en varios hosts, deberá ejecutar channelsign en los hosts.
+que constituyen la mayoría de los canales o la cantidad requerida de organizaciones según la política de respaldo de su canal.
+El archivo firmado deberá pasarse de una organización a otra para que se recopilen todos los endosos.
+cuando se ejecuta el comando de actualización de canal.
