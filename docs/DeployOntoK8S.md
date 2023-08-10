@@ -1,66 +1,65 @@
-# Use Minifabric deploy Hyperledger Fabric onto Kubernetes
+# Use Minifabric para implementar Hyperledger Fabric en Kubernetes
 
-To deploy a Hyperledger Fabric network onto Kubernetes using Minifabric
-is no difference than deploy Fabric onto a local Docker environment. The
-only requirement is to have a working Kubernetes cluster and a running
+Para implementar una red de Hyperledger Fabric en Kubernetes mediante Minifabric
+no hay diferencia que implementar Fabric en un entorno Docker local. El
+El único requisito es tener un clúster de Kubernetes en funcionamiento y un 
 Nginx Ingress controller.
 
-Following the following steps to deploy Fabric onto Kubernetes:
+Siga los siguientes pasos para implementar Fabric en Kubernetes:
 
-### 1. Get Minifabric (Same process as described in the main README.md file)
+### 1. Obtenga Minifabric (el mismo proceso que se describe en el archivo principal README.md)
 
-##### If you are using Linux (Ubuntu, Fedora, CentOS), or OS X
+##### Si está utilizando Linux (Ubuntu, Fedora, CentOS) u OS X
 ```
 mkdir -p ~/mywork && cd ~/mywork && curl -o minifab -sL https://tinyurl.com/yxa2q6yr && chmod +x minifab
 ```
 
-##### If you are using Windows 10
+##### Si está utilizando Windows 10
 ```
 mkdir %userprofile%\mywork & cd %userprofile%\mywork & curl -o minifab.cmd -sL https://tinyurl.com/y3gupzby
 ```
 
-##### Make minifab available system wide
+##### Hacer que minifab esté disponible en todo el sistema
 
-Move the minifab (Linux and OS X) or minifab.cmd (Windows) script to a directory which is part of your execution PATH in your system or add the directory containing it to your PATH. This is to make the later operations a bit easier, you will be able to run the minifab command anywhere in your system without specifying the path to the minifab script.
+Mueva el script minifab (Linux y OS X) o minifab.cmd (Windows) a un directorio que sea parte de su PATH de ejecución en su sistema o agregue el directorio que lo contiene a su PATH. Esto es para facilitar un poco las operaciones posteriores, podrá ejecutar el comando minifab en cualquier lugar de su sistema sin especificar la PATH al script minifab.
 
-### 2. Docker environment where you run Minifabric
+### 2. Entorno Docker donde ejecuta Minifabric
 
-Minifabric is itself containerized. When it is working, it uses docker. If you do not
-have Docker running on the machine you plan to run Minifabric, you should install docker
-18.01 or newer. Without Docker, Minifabric will not work.
+Minifabric en sí mismo está en contenedores. Cuando está funcionando, usa docker. Si no lo hace
+tiene Docker ejecutándose en la máquina en la que planea ejecutar Minifabric, debe instalar docker
+18.01 o posterior. Sin Docker, Minifabric no funcionará.
 
-### 3. Prepare your kube config file
+### 3. Prepare su archivo de configuración kube
 
-Minifabric depends on the kube config file to make connections to a running Kubernetes
-cluster. You should have a kube config file ready as Minifabric vars/kubeconfig/config.
-The file should have a read permission by root user. Getting your kube config file is
-cloud dependent, please refer to each different cloud how to get the file. Typically
-you would need to run cloud specific command such as `gcloud`, `ibmcloud`,`az`, `aws`
-etc. Once you use different command to login, then you should run `kubectl get nodes`
-to verify that you can indeed access the cluster. Minifabric itself does not use `kubectl`,
-referencing it here is for you to verify that you can certainly login to the cluster.
-`kubectl` command normally will produce a kube config file which is saved in `~/.kube/config`
-you should be able to directly copy that file to Minifabric's `vars/kubeconfig/` directory
-since that file contains access token.
-
-### 4. (conditional) http proxy consideration
-
-If http proxy exists between your operating machine and kubernetes,
-you need follows this section. otherwise, skip to next section.
-
-more specifically, when your case is:
-- setup fabric from your office, onto cloud managed kubernetes cluster => follow this section
-- setup fabric from your office, onto on-premise kubernetes cluster    => skip to next section.
-- other cases                                                          => maybe skip to next section.
+Minifabric depende del archivo de configuración de kube para realizar conexiones a un Kubernetes en ejecución
+grupo. Debe tener un archivo de configuración de kube listo como Minifabric vars/kubeconfig/config.
+El archivo debe tener un permiso de lectura por parte del usuario root. Obtener su archivo de configuración de kube es
+depende de la nube, consulte cada nube diferente sobre cómo obtener el archivo. Típicamente
+necesitaría ejecutar un comando específico de la nube como `gcloud`, `ibmcloud`, `az`, `aws`
+etc. Una vez que use un comando diferente para iniciar sesión, debe ejecutar `kubectl get nodes`
+para verificar que efectivamente puede acceder al clúster. Minifabric en sí no usa `kubectl`,
+hacer referencia aquí es para que usted verifique que ciertamente puede iniciar sesión en el clúster.
+El comando `kubectl` normalmente producirá un archivo de configuración de kube que se guarda en `~/.kube/config`
+debería poder copiar directamente ese archivo en el directorio `vars/kubeconfig/` de Minifabric
+ya que ese archivo contiene token de acceso.
 
 
-at current, it needs to set following envirormnent varibales in terminall shell.
+### 4. (condicional) consideración de proxy http
+Si existe un proxy http entre su máquina operativa y kubernetes,
+necesita sigue esta sección. de lo contrario, pase a la siguiente sección.
 
-on linux:
+más concretamente, cuando tu caso sea:
+- configure la estructura desde su oficina, en el clúster de kubernetes administrado en la nube => siga esta sección
+- configure la estructura desde su oficina, en el clúster de kubernetes local => salte a la siguiente sección.
+- otros casos => tal vez pase a la siguiente sección.
+
+en la actualidad, necesita establecer las siguientes variables de entorno en el shell del terminal.
+
+en linux:
 ```bash
 #
 export https_proxy=http://yourID:yourPass@yourProxyhost:port/
-# you can use no_proxy environment vairable as usuall.
+# you can use no_proxy environment variable as usuall.
 export no_proxy=localhost,127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,*.local,*.yourdomain.com
 
 # for kubernetes operation via ansible
@@ -68,7 +67,7 @@ export K8S_AUTH_PROXY=http://yourProxyhost:port/
 export K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH=yourID:yourPass
 ```
 
-on win10:
+en win10:
 ```bat
 set https_proxy=http://yourID:yourPass@yourProxyhost:port/
 set no_proxy=localhost,127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,*.local,*.yourdomain.com
@@ -77,26 +76,26 @@ set K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH=yourID:yourPass
 REM you can set above variables as environment variables in win10 OS.
 ```
 
-### 5. Prepare Nginx ingress controller
+### 5. Preparar el Nginx ingress controller
 
-Minifabric uses kubernetes ingress services to expose Fabric node endpoints. Without
-ingress to expose Fabric node endpoints, Fabric will be only available inside a kubernetes
-cluster which normally is not very useful. To deploy Nginx Ingress controller, one simply
-need to run the following command.
+Minifabric usa los servicios de ingreso de kubernetes para exponer los puntos finales del nodo Fabric. Sin
+ingreso para exponer los puntos finales del nodo Fabric, Fabric solo estará disponible dentro de un kubernetes
+clúster que normalmente no es muy útil. Para implementar el controlador Nginx Ingress, uno simplemente
+necesita ejecutar el siguiente comando.
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/cloud/deploy.yaml
 ```
 
-Please refer the document here[https://kubernetes.github.io/ingress-nginx/deploy/] for more information
-on Nginx ingress controller
+Consulte el documento aquí[https://kubernetes.github.io/ingress-nginx/deploy/]   para mayor informacion
+de Nginx ingress controller
 
-Once it is deployed and running, you should get a public IP address which is needed to
-config your Minifabric spec.yaml file.
+Una vez que se implementa y se ejecuta, debe obtener una dirección IP pública que se necesita para
+Configura tu archivo Minifabric spec.yaml.
 
-### 6. Prepare your Minifabric spec file
+### 6. Prepare su archivo de especificaciones Minifabric
 
-Create a yaml file named `spec.yaml` in Minifabric's working directory. The following is an example
+Cree un archivo yaml llamado `spec.yaml` en el directorio de trabajo de Minifabric. Lo siguiente es un ejemplo
 
 ```
 fabric:
@@ -132,15 +131,16 @@ fabric:
   # container_options: "--restart=always --log-opt max-size=10m --log-opt max-file=3"
 ```
 
-Notice the `endpoint_address` field, which was optional when deploy in docker env, but
-it is now mandatory for Kubernetes deployment. Without configuring this entry, when
-Minifabric detectes the presence of the `vars/kubeconfig/config` file, it will fail
-the process. In this `spec.yaml` file, you can customize the node just like you do
-normally with Docker environment deployment.
+Observe el campo `endpoint_address`, que era opcional cuando se implementaba en docker env, pero
+ahora es obligatorio para la implementación de Kubernetes. Sin configurar esta entrada, cuando
+Minifabric detecta la presencia del archivo `vars/kubeconfig/config`, fallará
+el proceso. En este archivo `spec.yaml`, puede personalizar el nodo tal como lo hace
+normalmente con la implementación del entorno Docker.
 
-### 7. (optional) Assign labels to nodes for controlling pod and node binding.
 
-first, check the node and labels in your k8s.
+### 7. (opcional) Asigne etiquetas a los nodos para controlar el enlace de pod y nodo.
+
+primero, verifique el nodo y las etiquetas en su k8s.
 ```
 kubectl get node --show-labels
 NAME        STATUS   ROLES    AGE    VERSION   LABELS
@@ -148,7 +148,7 @@ node1       Ready    <none>   3h12m   v1.19.6  ...
 node2       Ready    <none>   3h12m   v1.19.6  ...
 ```
 
-assign labels  to node for controlling pod and node binding.
+asigne etiquetas al nodo para controlar el enlace de pod y nodo.
 ```
 # this is a sample, play and decide bindings by yourself
 
@@ -170,68 +170,67 @@ kubectl label node node1 dock.hlf-fqdn/orderer1.foodtracking.com-
 :
 ```
 
-As you see the above, three types of label involved to control the pod's destination node.
+Como puede ver arriba, hay tres tipos de etiquetas involucradas para controlar el nodo de destino del pod.
 
-* Type A (strongest;  dock.hlf-fqdn/*)
-   - you can fully control, one by one.
-   - the word following 'dock.hlf-fqdn/' is up to your spec.yaml.
-* Type B (second;     dock.hlf-type/*)
-   - you can control type by type.
-   - defined labels are followings:
-       - dock.hlf-type/peer:     all pods listed in 'peers:' of spec.yaml
-       - dock.hlf-type/orderer:  all pods listed in 'orderer:' of spec.yaml
-       - dock.hlf-type/ca:       all pods listed in 'cas:' of spec.yaml
-       - dock.hlf-type/couchdb:  all backend pods for peers only if 'minifab ... -s couchdb' is supecified.
-* Type C (3rd;        dock.hlf-dn/*)
-   - you can control domain by domain
-   - the word following 'dock.hlf-dn/' is up to your spec.yaml.
+* Tipo A (mas fuerte;  dock.hlf-fqdn/*)
+   - Puedes controlar completamente, una por una.
+   - la palabra que sigue a 'dock.hlf-fqdn/' depende de su 'spec.yaml'.
+* Tipo B (segunda;     dock.hlf-type/*)
+   - puedes controlar tipo por tipo.
+   - las etiquetas definidas son las siguientes:
+       - dock.hlf-type/peer:     todos los pods enumerados en 'pares:' de spec.yaml
+       - dock.hlf-type/orderer:  todos los pods enumerados en 'orderer:' de spec.yaml
+       - dock.hlf-type/ca:       todos los pods enumerados en 'cas:' de spec.yaml
+       - dock.hlf-type/couchdb:  todos los pods de back-end para peers solo si 'minifab ... -s couchdb' es sospecha
+* Tipo C (tercera;        dock.hlf-dn/*)
+   - puedes controlar dominio por dominio.
+   - la palabra que sigue a 'dock.hlf-dn/' depende de su 'spec.yaml'.
 
-* note: node labeling for couchdb needs a little care as following example:
-   - dock.hlf-fqdn/peer1.org0.foodtracking.com.couchdb=ok   ('.couchdb' appended at the end of the frontend peer's fqdn).
-   - dock.hlf-dn/org0.foodtracking.com=ok controls couchdb as well as peer and ca.
+* nota: el etiquetado de nodos para couchdb necesita un poco de cuidado como el siguiente ejemplo:
+   - dock.hlf-fqdn/peer1.org0.foodtracking.com.couchdb=ok   ('.couchdb' adjunto al final del fqdn del peer frontend).
+   - dock.hlf-dn/org0.foodtracking.com=ok controla couchdb, así como peer y CA.
 
-* You can assign multiple labels to a node(in mixing also allowed).
-* after pods deployment, you can check binding results by ```kubectl get pod -A -o wide```
-* this feature works ONLY IF you assigned labels BEFORE deploying Fabric network.
+* Puede asignar varias etiquetas a un nodo (también se permite mezclar).
+* después de la implementación de los pods, puede comprobar los resultados de vinculación mediante ```kubectl get pod -A -o wide```
+* esta función SOLO funciona SI asignó etiquetas ANTES de implementar la red Fabric.
 
-* NOTE: k8s deploys a pod by original manner as before, in following cases:
-   - if corresponding label is not assigned in any nodes.
-   - if destination node reached to the max-pods-per-node limitation
-
+* NOTA: k8s despliega un pod de la manera original como antes, en los siguientes casos:
+  - si la etiqueta correspondiente no está asignada en ningún nodo.
+  - si el nodo de destino alcanzó el límite máximo de pods por nodo.
 
 ### 8. Deploy Fabric network onto your Kubernetes cluster
 
-Once all the above steps are done, you can run the `minifab up` command to get your
-Fabric network running in the Kubernetes cluster.
+Una vez que haya realizado todos los pasos anteriores, puede ejecutar el comando `minifab up` para obtener su
+Red Fabric que se ejecuta en el clúster de Kubernetes.
 
 ```
    minifab up -e true
 ```
 
-Notice the `-e` command line flag which is now also required for the same reason as
-the `endpoint_address` configuration in `spec.yaml` file
+Observe el indicador de línea de comando `-e` que ahora también se requiere por la misma razón que
+la configuración `endpoint_address` en el archivo `spec.yaml`
 
 ### 9. (optional) Deploy Fabric network onto Kubernetes with Fabric Operator
 
-To deploy with the Fabric Operator, include the target environment `-a` flag and specify `K8SOPERATOR`.
+Para implementar con Fabric Operator, incluya el indicador `-a` del entorno de destino y especifique `K8SOPERATOR`.
 
 ```
    minifab up -e true -a K8SOPERATOR
 ```
-With the Fabric Operator running, it is easy to deploy nodes to the network. First, create a nodespecs directory within the vars directory `vars/nodespecs`, and then add the spec files of the nodes you wish to deploy into nodespecs. 
+Con Fabric Operator en ejecución, es fácil implementar nodos en la red. Primero, cree un directorio nodespecs dentro del directorio vars `vars/nodespecs` y luego agregue los archivos de especificaciones de los nodos que desea implementar en nodespecs.
 
-Now simply run the `deploynodes` operation: 
+Ahora simplemente ejecuta la operación `deploynodes`:
 
 ```
    minifab deploynodes
 ```
 
-This operation will sort and deploy the specs in order based on their kind. Deploynodes will prioritize the nodes by the order of `nodecert`, `ca`, `orderer`, `peer`, `chaincode`, `agent`, and lastly, `console`.
+Esta operación clasificará e implementará las especificaciones en orden según su tipo. Deploynodes priorizará los nodos por orden de `nodecert`, `ca`, `orderer`, `peer`, `chaincode`, `agent` y, por último, `console`.
 
 ### 10. Remove Fabric network from your Kubernetes cluster
 
-To remove everything including the persistent storage created during the deployment,
-you can simply run the good old `minifab cleanup` command:
+Para eliminar todo, incluido el almacenamiento persistente creado durante la implementación,
+simplemente puede ejecutar el viejo y buen comando `minifab cleanup`:
 
 ```
    minifab cleanup
@@ -239,28 +238,27 @@ you can simply run the good old `minifab cleanup` command:
 
 ### 11. How about other operations?
 
-Minifabric supports all operations in Kubernetes cluster just like it supports
-all Fabric operations like in Docker env. If you like to join a channel, install
-a chaincode etc, you do exactly the same. For example, to create a new channel, run
-the following command:
+Minifabric admite todas las operaciones en el clúster de Kubernetes al igual que lo hace
+todas las operaciones de Fabric como en Docker env. Si desea unirse a un canal, instale
+un código de cadena, etc., haces exactamente lo mismo. Por ejemplo, para crear un nuevo canal, ejecute
+el siguiente comando:
 
 ```
    minifab create -c funchannel
 ```
 
-To join peers defined in `spec.yaml` to current channel, run this command:
+Para unir pares definidos en `spec.yaml` al canal actual, ejecute este comando:
 
 ```
    minifab join
 ```
 
-To install a chaincode to all the nodes defined in `spec.yaml` file, run this command
-
+Para instalar un código de cadena en todos los nodos definidos en el archivo `spec.yaml`, ejecute este comando.
 ```
    minifab install -n mychaincode
 ```
-Just to make sure that your chaincode source is in the `vars/chaincode/mychaincode`
-directory.
+Solo para asegurarse de que la fuente de su código de cadena esté en `vars/chaincode/mychaincode`
+directorio.
 
-Any other command which has not been discussed above works exactly same way as in
-Docker environment.
+Cualquier otro comando que no se haya discutido anteriormente funciona exactamente de la misma manera que en
+Entorno Docker.

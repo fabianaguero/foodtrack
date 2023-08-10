@@ -1,44 +1,44 @@
-# Known Issues
-This document lists the known issues that you may experience during operation of minifabric.
+# Problemas conocidos
+Este documento enumera los problemas conocidos que puede experimentar durante el funcionamiento de minifabric.
 
-### Chaincode Installation
-1. [Error installing chaincode](#1)
+### Instalación del chaincode 
+1. [Error al instalarel chaincode](#1)
 
 ### Kubernetes
-1. [Service Endpoint Error](#2)
+1. [Error en el Service Endpoint](#2)
 
 ****
-### ISSUE:
+### PROBLEMA:
 
 <a name="1"></a>Error: chaincode install failed with status: 500 - failed to invoke backing implementation of 'InstallChaincode'
 
-### ENVIRONMENT:
+### AMBIENTE:
 
-Mac with Intel Chip / MacOS Big Sur 11.3.1 / Docker 20.10.6
+Mac con Intel Chip / MacOS Big Sur 11.3.1 / Docker 20.10.6
 
-### SOLUTION:
+### SOLUCION:
 
-- Launch Docker Dashboard
-- Open Preferences
-- Click Experimental Features
-- Disable Use gRPC FUSE for file sharing
-- Apply / Restart
+- Inicie el panel Docker
+- Preferencias abiertas
+- Haga clic en Funciones experimentales
+- Deshabilitar Usar gRPC FUSE para compartir archivos
+- Aplicar / Reiniciar
 
-### Related issue(s): [#214](https://github.com/hyperledger-labs/minifabric/issues/214)  [#87](https://github.com/hyperledger-labs/minifabric/issues/87)
+### Problemas relacionados: [#214](https://github.com/hyperledger-labs/minifabric/issues/214)  [#87](https://github.com/hyperledger-labs/minifabric/issues/87)
 
 ****
 
-### ISSUE:
+### PROBLEMA:
 
 <a name="2"></a>ServiceEndpoint Error: Failed to connect to remote gRPC server x.x.x.x:xxxx, url:grpcs://localhost:xxxx
 
-### ENVIRONMENT:
+### AMBIENTE:
 
 Kubernetes / K8S
 
-### SOLUTION:
+### SOLUCION:
 
-When connecting to the fabric network deployed in Kubernetes/K8S cluster using the minifabric generated connection profiles with Fabric SDK, make sure to double check that the **GatewayOptions.discovery asLocalhost = false** as shown below (otherwise if set to **true**, the SDK will be forced to use **localhost** when discovering peers/orders).
+Al conectarse a la red de estructura implementada en el clúster de Kubernetes/K8S mediante los perfiles de conexión generados por minifabric con Fabric SDK, asegúrese de verificar que **GatewayOptions.discovery asLocalhost = false** como se muestra a continuación (de lo contrario, si se establece en **true **, el SDK se verá obligado a usar **localhost** al descubrir pares/pedidos).
 ```
  GatewayOptions = {
   wallet,
@@ -46,24 +46,23 @@ When connecting to the fabric network deployed in Kubernetes/K8S cluster using t
   discovery: { enabled: true, asLocalhost: false }
 }
 ```
-### Related issue(s): [#215](https://github.com/hyperledger-labs/minifabric/issues/215)
+### Problemas relacionados: [#215](https://github.com/hyperledger-labs/minifabric/issues/215)
 
 ****
 
-### ISSUE:
+### PROBLEMA:
 
 <a name="2"></a>The file contains an identity that already exists.
-### ENVIRONMENT:
+### AMBIENTE:
 
 fabric-operations-console - Docker or K8S
-Any Platform - Linux or Mac or Windows
+Cualquier plataforma - Linux or Mac or Windows
 
-### SOLUTION:
+### SOLUCION:
+Al intentar importar el archivo assets.zip como parte de la implementación de la consola de operaciones de Fabric en Minifabric, no es la primera vez que se encuentra con este mensaje de error y no puede realizar la importación del archivo zip correctamente.
 
-When trying to import assets.zip file as part of fabric operations console deployment in Minifabric, a non-first time, you may encounter this error message and fail to perform importing of zip file successfully.
+La solución alternativa es navegar a la opción Wallet en la misma consola, eliminar las identidades ya almacenadas en el almacenamiento web del navegador y volver a importar el archivo assets.zip.
 
-The work-around is to navigate to Wallet option on the same console, delete identities already stored in the browser web storage and performing the re-import of assets.zip file.
+La razón por la que aparece este error se debe a las identidades que quedan en el almacenamiento web del navegador y al conflicto/nombre que choca con los mismos artefactos que ya están en el almacenamiento web.
 
-The reason this error appears is due to the identities remaining in browser web storage and conflicting/name clashing with same artifacts already in web storage.
-
-### Related issue(s): 
+### Problemas relacionados(s): 

@@ -1,18 +1,18 @@
-# Expand an existing Fabric network with a new org
+# Ampliar una red Fabric existente con una nueva organización
 
-This document describes the process how to do the following:
+Este documento describe el proceso de cómo hacer lo siguiente:
 
-0. Set up two sites, one is considered an existing Fabric network, the other one is considered a new organization
-1. Add a new organization into existing fabric network
-2. Join peers from the new organization to the existing channel
-3. Install chaincode running on the existing peers onto new peers
-4. Approve and commit the chaincode
-5. Verify endorsement and chaincode containers
+0. Configure dos sitios, uno se considera una red Fabric existente, el otro se considera una nueva organización
+1. Agregue una nueva organización a la red Fabric existente.
+2. Agregar peers de la nueva organización en el canal existente. 
+3. Instale el chaincode que se ejecuta en los peers existentes en nuevos peers.
+4. Aprobar y confirmar el chaincode.
+5. Verifique los contenedores de endoso y chaincode.
 
-Assume that you have two working directories, `mysite0` and `mysite1` under your root directory. Each working
-directory will represent a site which may include one or multiple orgs and peers, the two working directory
-can very well be on differnt servers, in that case, you will need to have other means such as `scp` to transfer
-necessary files between servers. Here are the two spec.yaml files
+Suponga que tiene dos directorios de trabajo, `mysite0` y `mysite1` en su directorio raíz. cada uno trabajando
+directorio representará un sitio que puede incluir una o varias organizaciones y peers, los dos directorios de trabajo
+puede muy bien estar en diferentes servidores, en ese caso, necesitará tener otros medios como `scp` para transferir
+archivos necesarios entre servidores. Aquí están los dos archivos `spec.yaml`.
 
 ```
 cat ~/mysite0/spec.yaml
@@ -37,7 +37,7 @@ fabric:
 
 ```
  
-## Bring up both sites using the following commands
+## Abra ambos sitios usando los siguientes comandos
 
 ```
 cd ~/mysite0
@@ -47,19 +47,21 @@ cd ~/mysite1
 minifab netup -e 7200 -o orgx.foodtracking.com
 ```
 
-The first command brings up a complete running fabric network with a channel named `mainchannel`
-created and chaincode named `samplecc` installed, approved, committed and initialized. There are
-two peer orgs and one orderer org. Once the command finished successfully, it is a fully running
-Fabric network and consider this as an existing Fabric network.
+El primer comando muestra una red Fabric en ejecución completa con un canal llamado `mainchannel`
+creado y un chaincode llamado `samplecc` instalado, aprobado, comiteado e inicializado. Hay
+dos organizaciones peers y una organización orderer. Una vez que el comando finalizó con éxito, se está ejecutando completamente 
+red Fabric y considere esto como una red Fabric existente.
 
-The second command brings up a new organization with only two peer nodes. No channel, no orderer
-nodes, just two peer nodes up running.
+El segundo comando abre una nueva organización con solo dos nodos peers. Sin canal, sin orden
+nodos, solo dos nodos peers en ejecución.
 
-## Join orgx.foodtracking.com to the application channel with the following step
-Since the mysite1 has the organization orgx.foodtracking.com, then the file produced
-by Minifabric for joining an existing network will be called `JoinRequest_orgx-example-com.json`
-under `~/mysite1/vars` directory. If you have different name for your organization, then the
-join request file will have different file name, make changes accordingly when you run the commands. 
+
+## Unir a orgx.foodtracking.com al canal de aplicación con el siguiente paso
+
+Dado que mysite1 tiene la organización orgx.foodtracking.com, el archivo producido
+por Minifabric para unirse a una red existente se llamará `JoinRequest_orgx-example-com.json`
+en el directorio `~/mysite1/vars`. Si tiene un nombre diferente para su organización, entonces el
+El archivo de solicitud de unión tendrá un nombre de archivo diferente, haga los cambios correspondientes cuando ejecute los comandos.
 
 ```
 cd ~/mysite0
@@ -67,9 +69,9 @@ sudo cp ~/mysite1/vars/JoinRequest_orgx-example-com.json ~/mysite0/vars/NewOrgJo
 minifab orgjoin
 ```
 
-## Import orderer nodes to orgx.foodtracking.com and join peers of orgx.foodtracking.com to the `mainchannel`
-For orgx.foodtracking.com peers to participate in Fabric network, the organization must know where orderers nodes are.
-To do that, we do `nodeimport`
+## Importar nodos de pedidos a orgx.foodtracking.com y unir a peers de orgx.foodtracking.com al `mainchannel`
+Para que los peers de orgx.foodtracking.com participen en la red Fabric, la organización debe saber dónde están los nodos orderers.
+Para hacer eso, hacemos `nodeimport`
 
 ```
 cd ~/mysite1
@@ -77,44 +79,41 @@ sudo cp ~/mysite0/vars/profiles/endpoints.yaml vars
 minifab nodeimport,join
 ```
 
-## Install and approve chaincode `samplecc` for orgx peers
+## Instalar y aprobar chaincode `samplecc` para peers orgx
 
 ```
 cd ~/mysite1
 minifab install,approve -n samplecc -p ''
 ```
 
-## Approve the chaincode on org0 and org1
-Since new orgs joined, the chaincode will need to be approved again so that new org can also commit
-
+## Aprobar el chaincode en org0 y org1
+Dado que se unieron nuevas organizaciones, el chaincode deberá aprobarse nuevamente para que la nueva organización también pueda comprometerse
 ```
 cd ~/mysite0
 minifab approve,discover,commit
 ```
 
-## Discover and verify the chaincode on orgx
-
+## Descubra y verifique el chaincode en orgx
 ```
 cd ~/mysite1
 minifab discover
 ```
 
-Verify that the file `./vars/discover/mainchannel/samplecc_endorsers.json` contains the orgx as
-endorsing group.
+Verifique que el archivo `./vars/discover/mainchannel/samplecc_endorsers.json` contenga el orgx como
+grupo avalador.
 
 ```
 cd ~/mysite1
 minifab stats
 ```
-
-The above command should show that mysite1 should have chaincode container like the following
-running
+El comando anterior debería mostrar que mysite1 debería tener un contenedor de chaincode como el siguiente
+correr
 
 ```
   dev-peer1.orgx.foodtracking.com-samplecc_1.0-9ea5e3809f : Up 4 minutes
   dev-peer2.orgx.foodtracking.com-samplecc_1.0-9ea5e3809f : Up 4 minutes
 ```
 
-## To use your own chaincode
-If you want to use your own chaincode, then you should have the chaincode in vars/chaincode directory
-and follow the structure to form chaincode. Then use your own chaincode in various commands.
+## Para usar tu propio chaincode
+Si desea utilizar su propio chaincode, debe tener el chaincode en el directorio vars/chaincode
+y siga la estructura para formar chaincode. Luego use su propio chaincode en varios comandos.

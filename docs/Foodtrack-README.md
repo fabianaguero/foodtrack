@@ -1,6 +1,6 @@
-# Minifabric
-Minifabric es una herramienta que le permite configurar una red Fabric, expandir su red, instalar y actualizar su propio chaincode, invocar transacciones, inspeccionar su ledger cambiar la configuración de su canal. Al realizar estas tareas con Minifabric, puede obtener enormes habilidades y una comprensión completa de Hyperledger Fabric.
-Actualmente proporciona las siguientes funciones:
+# Foodtracking
+
+Foodtrackng es un sistema para seguir desde su manufactura hasta la entrega al cliente se deploya en una red Fabric Actualmente proporciona las siguientes funciones:
 
 1. Deployar una red Fabric basado en esto  [spec](https://github.com/hyperledger-labs/minifabric/blob/main/spec.yaml) o [your own spec](#Setup-a-network-using-a-different-spec).
 2. Bajar la red Fabric deployada.
@@ -11,7 +11,7 @@ Actualmente proporciona las siguientes funciones:
 7. Generacion de perfiles de conexión y archivos de billetera para SDK de go/node/python de fabric y extensiones de VS Code.
 8. Soporte de métricas y estado del nodo de Fabric.
 9. Integracion con Hyperledger Explorer y Caliper.
-10. Ejecute aplicaciones que funcionan con la red Fabric
+10.Ejecute aplicaciones que funcionan con la red Fabric
 
 The table of the content
 ========================
@@ -33,7 +33,7 @@ The table of the content
 16. [Actualizar minifabric](#update-minifabric)
 17. [Ver mas comandos de  Minifabric](#see-more-available-minifabric-commands)
 18. [Videos de Minifabric](#minifabric-videos)
-19. [Construir localmente minifabric](#build-minifabric-locally)
+19. [Construir loclmente minifabric](#build-minifabric-locally)
 20. [Conectar Explorer a su red Fabric](#hook-up-explorer-to-your-fabric-network)
 21. [Ejecute su aplicación rápidamente](#run-your-application-quickly)
 22. [Ejectuar test de Caliper](#run-caliper-test)
@@ -216,7 +216,7 @@ en vez de :
 minifab ccup -v version [ -n <chaicnodename> ] [ -l <lang> ] [ -r true ] [ -p '"methodname","p1","p2",...' ]
 ```
 
-### Invocar metodos del chaincode
+### Invoke chaincode methods
 Minifab utiliza el parámetro -p para invocar un método de chaincode. El parámetro -p debe incluir el nombre del método y sus parámetros, el comando `minifab invocar` debe seguir este formato:
 
 ```
@@ -255,7 +255,7 @@ minifab blockquery -b 6
 
 Los dos primeros comandos hacen lo mismo y recuperan el bloque más reciente. El último comando recupera el número de bloque 7 (observe que el primer bloque es 0)
 
-### Actualizar la configuracion del canal
+### Update the channel configuration
 Para actualizar la configuración del canal, siga estos pasos:
 
 ```
@@ -272,17 +272,17 @@ El comando anterior firmará la actualización de la configuración del canal us
 transacción de actualización de configuración de canal. Cuando todo haya terminado con éxito, puede hacer otra "channelquery" para ver el
 si los cambios toman efecto.
 
-### Agregar una nueva organizacion a la red Fabric
+### Add a new organization to your Fabric network
 Para agregar una nueva organización a su red, siga los pasos a continuación:
 
 1. Obtenga la configuración del canal ejecutando el comando `minifab channelquery`. Este comando producirá un archivo llamado `./vars/<channel_name>_config.json`
-2. Busque el archivo `JoinRequest` para la nueva organización que debería haber sido producido por Minifabric cuando Minifabric configuró la nueva organización en `vars` en su directorio de trabajo. Si su red no fue configurada por Minifabric, entonces debe crear este archivo por otros medios.
+2. Busque el archivo JoinRequest para la nueva organización que debería haber sido producido por Minifabric cuando Minifabric configuró la nueva organización en `vars` en su directorio de trabajo. Si su red no fue configurada por Minifabric, entonces debe crear este archivo por otros medios.
 3. Edite el archivo `<channel_name>_config.json` y agregue todo el contenido del archivo JoinRequest al archivo de configuración del canal. Asegúrese de que el nuevo contenido se coloque en paralelo con las organizaciones existentes.
-4. Ejecute el comando `minifab channelsign,channelupdate`.
+4. Ejecute el comando 'minifab channelsign,channelupdate'.
 
 Una vez que todos los pasos se han realizado correctamente, la nueva organización ahora es parte de su canal. El administrador de la nueva organización ahora puede unir a sus peers a ese canal. Puede encontrar útil [el video que muestra cómo agregar una nueva organización a una red](https://www.youtube.com/watch?v=c1Ab57IrgZg&list=PL0MZ85B_96CExhq0YdHLPS5cmSBvSmwyO&index=5&t=3s).
 
-### Verificar la salud y las metricas del nodo
+### Check node health and metrics
 Cuando Minifabric configura su red Fabric, habilita la salud y el
 capacidades métricas. El puerto para servir el control de estado y las métricas normalmente se denomina puerto de operación, este puerto
 es un puerto diferente al puerto GRPC del servicio de nodo Fabric. Minifabric siempre establece el puerto de operación en 7061
@@ -303,13 +303,13 @@ metrics:   9.8.7.6:9001/metrics
 ```
 
 ### Contexto de ejecucion 
-Minifab utiliza muchas configuraciones a lo largo de todas las operaciones. Esta configuración se puede cambiar cada vez que ejecuta un comando minifab y esta configuración se guardará en el archivo `vars/envsetting`. Cada vez que se ejecuta un comando, ese archivo se cargará y la configuración especificada en la línea de comando se escribirá en ese archivo. Todas las configuraciones guardadas y especificadas en el comando crean el contexto de ejecución actual. Incluyen el nombre del chaincode los parámetros de invocación del chaincode la versión del chaincode el idioma del chaincode el nombre del canal, la versión de Fabric, la exposición del punto final y el número de consulta de bloque.
+Minifab utiliza muchas configuraciones a lo largo de todas las operaciones. Esta configuración se puede cambiar cada vez que ejecuta un comando minifab y esta configuración se guardará en el archivo vars/envsetting. Cada vez que se ejecuta un comando, ese archivo se cargará y la configuración especificada en la línea de comando se escribirá en ese archivo. Todas las configuraciones guardadas y especificadas en el comando crean el contexto de ejecución actual. Incluyen el nombre del chaincode los parámetros de invocación del chaincode la versión del chaincode el idioma del chaincode el nombre del canal, la versión de Fabric, la exposición del punto final y el número de consulta de bloque.
 
 Todos los valores predeterminados los establece [envsettings](https://github.com/hyperledger-labs/minifabric/blob/main/envsettings). Cada uno de los valores se actualiza si se especifica en una línea de comando y se guarda en `./vars/envsettings`. Se desaconseja encarecidamente a los usuarios que cambien manualmente ese archivo, ya que es básicamente un script. Los cambios en ese archivo solo deben realizarse con el comando minifab.
 
 Debido al contexto de ejecución, cuando ejecuta un comando, realmente no tiene que especificar todos los parámetros necesarios si no necesita cambiar el contexto. Por ejemplo, si acaba de ejecutar un comando de invocación de chaincode y desea ejecutar invocar nuevamente, entonces no necesita especificar el parámetro -n porque ya está en el contexto de ejecución actual. Lo mismo se aplica a todos los parámetros enumerados en ese archivo. No necesita especificar el parámetro en un comando a menos que tenga la intención de usar un nuevo valor en su comando. Una vez que lo haga, el nuevo valor se convierte en parte del contexto de ejecución actual.
 
-###Trabajar con los constructores de chaincodes personalizados
+### Working with customised chaincode builders
 Fabric (v> 2.0) permite a los usuarios trabajar con generadores de chaincode personalizados y entornos de tiempo de ejecución. Esto es particularmente útil para los usuarios que operan dentro de redes restringidas porque las imágenes del generador de chaincode a menudo necesitan acceder a la web externa para operaciones como `npm install`. Una vez que haya creado una imagen acoplable personalizada, puede apuntar a minifab desde `spec.yaml`, p.
 ```
 fabric:
@@ -321,19 +321,19 @@ fabric:
 donde  `hyperledger/fabric-nodeenv:my2.2` es el nombre y el tag de su imagen personalizada. Cambie `NODE` poe `GO` o `JAVA` para códigos de cadena escritos en esos idiomas, respectivamente. Tenga en cuenta que esto establece la variable de entorno en todos los nodos del mismo nivel (use varios spec.yaml en varios directorios para una aplicación de política más granular).
 
 
-### Actualizar minifabric
+### Update minifabric
 Minifabric evoluciona muy rápido. Siempre es una buena idea actualizar su Minifabric de vez en cuando simplemente ejecutando el siguiente script
 ```
 curl -o minifab -L https://tinyurl.com/twrt8zv && chmod +x minifab
 docker pull hyperledgerlabs/minifab:latest
 ```
 
-### Ver mas comandos de Minifabric
+### See more available Minifabric commands
 ```
 minifab
 ```
 
-### Para las personas que tienen problemas para descargar imágenes desde docker hub
+### For the people who has trouble to download images from docker hub
 Minifabric utiliza imágenes Docker oficiales de Hyperledger de Docker Hub. Extraerá automáticamente estas imágenes cuando las necesite. Para las personas con una conexión a Internet lenta, extraer imágenes puede ser extremadamente lento o casi imposible. Para evitar roturas debido a problemas de extracción de imágenes, puede extraer las siguientes imágenes de otros repositorios acoplables o usar diferentes medios para extraer estas imágenes, como, por ejemplo, escribir su propio script para extraer imágenes durante la noche. Mientras estas imágenes existan en su máquina, minifab no las volverá a extraer. Para ayudarte con esto, aquí está la lista de imágenes en caso de que quieras sacarlas por algún otro medio.
 
 ##### Fabric 2.0
@@ -348,7 +348,7 @@ hyperledger/fabric-ca:1.4
 hyperledger/fabric-couchdb:latest
 ```
 
-##### Fabric 1.4 cual es un alias a 1.4.6
+##### Fabric 1.4 which is an alias to 1.4.6
 ```
 hyperledgerlabs/minifab:latest
 hyperledger/fabric-ca:1.4
@@ -362,10 +362,10 @@ hyperledger/fabric-baseos:amd64-0.4.18
 
 Para otras versiones de Fabric que sean iguales o superiores a 1.4.1, reemplace la etiqueta según corresponda.
 
-### Videos de Minifabric
+### Minifabric videos
 Si desea obtener más información, mire la [serie de 6 videos sobre cómo desarrollar Hyperledger Fabric usando Minifabric](https://www.youtube.com/playlist?list=PL0MZ85B_96CExhq0YdHLPS5cmSBvSmwyO)
 
-### Construir localmente minifabric
+### Build minifabric locally
 Minifabric cuando se instala en su sistema es realmente solo un script corto. Después de ejecutar al menos un comando minifab, una imagen acoplable denominada hyperledgerlabs/minifab:latest se extraerá automáticamente de Docker Hub. A lo largo del ciclo de vida de Minifabric, su sistema solo debe tener este script y la imagen de Docker. Para eliminar Minifabric, solo necesita eliminar el script y la imagen de Docker. Si desea crear la imagen de Docker usted mismo, siga los pasos a continuación, el proceso se aplica a Linux, OS X y Windows:
 
 ```
@@ -374,7 +374,7 @@ cd minifabric
 docker build -t hyperledgerlabs/minifab:latest .
 ```
 
-### Conectar Explorer a su red Fabric
+### Hook up Explorer to your Fabric network
 Si desea utilizar una interfaz de usuario para ver su red Fabric, las transacciones y los bloques, puede iniciar fácilmente Hyperledger Explorer ejecutando lo siguiente comando:
 
 ```
@@ -388,8 +388,8 @@ minifab explorerdown
 ```
 Minifabric `cleanup` también cerrará Hyperledger Explorer.
 
-Ejecute su aplicación rápidamente
-Si ya tiene su aplicación desarrollada, puede utilizar el comando apprun de Minifabric para ejecutarla rápidamente. Coloque todo su código en el directorio `vars/app/node` o `vars/app/go`, luego ejecute el comando `minifab apprun -l go` para la aplicación escrita en go, o ejecute el comando `minifab apprun -l node` para la aplicación escrita en nodo. Minifabric creará un entorno para ejecutar su aplicación. Minifabric viene con aplicaciones de muestra que invocan el chaincode samplecc. Si no tiene una aplicación, simplemente puede ejecutar la aplicación de muestra para ver cómo funcionan las cosas. Una vez que inicie el comando apprun, Minifabric colocará los archivos de conexión necesarios en el directorio de la aplicación, luego desplegará las dependencias y ejecutará su programa. Esta función es experimental y actualmente se admiten las aplicaciones escritas en go o node. Para probar su propia aplicación, reemplace el archivo main.go o main.js con su código, y posiblemente cambie el paquete.json o mod.go para que coincida con sus dependencias, luego ejecute el comando `minifab apprun`.
+### Run your application quickly
+Si ya tiene su aplicación desarrollada, puede utilizar el comando apprun de Minifabric para ejecutarla rápidamente. Coloque todo su código en el directorio vars/app/node o vars/app/go, luego ejecute el comando `minifab apprun -l go` para la aplicación escrita en go, o ejecute el comando `minifab apprun -l node` para la aplicación escrita en nodo. Minifabric creará un entorno para ejecutar su aplicación. Minifabric viene con aplicaciones de muestra que invocan el chaincode samplecc. Si no tiene una aplicación, simplemente puede ejecutar la aplicación de muestra para ver cómo funcionan las cosas. Una vez que inicie el comando apprun, Minifabric colocará los archivos de conexión necesarios en el directorio de la aplicación, luego desplegará las dependencias y ejecutará su programa. Esta función es experimental y actualmente se admiten las aplicaciones escritas en go o node. Para probar su propia aplicación, reemplace el archivo main.go o main.js con su código, y posiblemente cambie el paquete.json o mod.go para que coincida con sus dependencias, luego ejecute el comando `minifab apprun`.
 
 ```
 app
@@ -398,7 +398,7 @@ app
 └── main.go
 ```
 
-### Ejecutar test de Caliper
+### Run Caliper test
 Minifabric viene con un chaincode llamado samplecc escrito en go y una aplicación de muestra que invoca métodos de samplecc. Puede usar los siguientes dos comandos para ejecutar Hyperledger Caliper después de abrir su red de estructura.
 
 ```
@@ -407,14 +407,14 @@ minifab caliperrun
 ```
 
 Después de que finalicen los comandos, puede revisar el resultado en el archivo `vars/report.html` en el directorio de trabajo actual. Lo mejor es abrir este archivo en un navegador.
-Si desea probar su propio chaincode la forma más fácil es instalar, aprobar, confirmar e inicializar su propio chaincode como cualquier otro chaincode utilizando los comandos de Minifabric. Luego, use su propio código de prueba para reemplazar el código en el archivo `vars/app/callback/app.js`, su propio código de nodo js debe seguir la estructura de devolución de llamada de Caliper; de lo contrario, el comando caliperrun ciertamente fallará. Una vez que su chaincode se haya instalado correctamente y su devolución de llamada esté en su lugar, ejecute el comando `minifab caliperrun` nuevamente para probar su chaincode.
-El comando caliperrun ejecutará la prueba durante 60 segundos de forma predeterminada. Si desea cambiar la configuración predeterminada que establece Minifabric para ejecutar la prueba, puede cambiar el archivo `vars/run/caliperbenchmarkconfig.yaml` después del primero, ya que Minifabric crea este archivo solo cuando no existe dicho archivo. Puede personalizar este archivo de la forma que desee, realizar cambios en cualquier configuración disponible en este archivo y ejecutar el comando nuevamente. Todos los cambios que realice tendrán efecto la próxima vez que ejecute el comando.
+Si desea probar su propio chaincode la forma más fácil es instalar, aprobar, confirmar e inicializar su propio chaincode como cualquier otro chaincode utilizando los comandos de Minifabric. Luego, use su propio código de prueba para reemplazar el código en el archivo vars/app/callback/app.js, su propio código de nodo js debe seguir la estructura de devolución de llamada de Caliper; de lo contrario, el comando caliperrun ciertamente fallará. Una vez que su chaincode se haya instalado correctamente y su devolución de llamada esté en su lugar, ejecute el comando `minifab caliperrun` nuevamente para probar su chaincode.
+El comando caliperrun ejecutará la prueba durante 60 segundos de forma predeterminada. Si desea cambiar la configuración predeterminada que establece Minifabric para ejecutar la prueba, puede cambiar el archivo vars/run/caliperbenchmarkconfig.yaml después del primero, ya que Minifabric crea este archivo solo cuando no existe dicho archivo. Puede personalizar este archivo de la forma que desee, realizar cambios en cualquier configuración disponible en este archivo y ejecutar el comando nuevamente. Todos los cambios que realice tendrán efecto la próxima vez que ejecute el comando.
 
-### Levantar Portainer web ui
+### Start up portainer web ui
 Mientras ejecuta su red Fabric, puede usar la administración basada en web de Portainer para ver e interactuar con su red en ejecución.
 Para iniciar la interfaz de usuario web de Portainer, simplemente ejecute el comando `minifab portainerup`, para apagarlo, ejecute el comando `minifab portainerdown`
 
-### Usar la consola para operaciones de Fabric
+### Use Fabric operation console
 Si desea utilizar la consola de operaciones de Fabric que IBM abrió recientemente, puede configurar su red de Fabric exponiendo los puntos finales y luego abrir la consola. Para ello, siga estos dos pasos:
 
 
@@ -422,7 +422,7 @@ Si desea utilizar la consola de operaciones de Fabric que IBM abrió recientemen
    minifab up -e true
    minifab consoleup
 ```
-El comando `consoleup` también creará un archivo de activos llamado assets.zip en `vars/console`
+El comando `consoleup` también creará un archivo de activos llamado assets.zip en vars/console
 directorio. Este archivo contiene carteras de administración y varios certificados y puntos finales de
 toda su red Fabric. Cuando inicia sesión en la consola, puede usar este archivo para importar
 la información a la consola para continuar.
